@@ -34,10 +34,13 @@ cd desktop/delete-reddit-posts
 node run.js
 ```
 ![command prompt example](https://i.imgur.com/aXbLpbV.png)
+
 - You will see a window popup on your screen
 - Click back onto the Terminal or Command Prompt and enter your Reddit username when prompted (then hit Enter)
 - Enter your Reddit password when prompted (then hit enter) [don't worry, only you will see your password!]
+
 ![command prompt example 2](https://i.imgur.com/Xsztpxa.png)
+
 - The program will run automatically from here. You can watch your posts disappear until the process is complete!
 
 # Notes
