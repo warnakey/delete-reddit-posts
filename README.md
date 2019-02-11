@@ -3,6 +3,9 @@ A program to delete ALL of your Reddit Posts. Code can be found at https://githu
 
 This program was written on February 9th and 10th, 2019 by Eric Warncke. ericwarncke@gmail.com. https://www.linkedin.com/in/ericwarncke/. 
 
+# Watch the video
+[![Video showing how to use the Delete Reddit Posts program](https://i.imgur.com/2Bhksxf.jpg)](https://www.youtube.com/watch?v=FAw0pPt0UKQ)
+
 # How to use this program
 
 - download a ZIP of this program by clicking the "Clone or download" button on https://github.com/warnakey/delete-reddit-posts
