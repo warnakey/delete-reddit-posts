@@ -1,5 +1,5 @@
-# delete-reddit-posts
-A program to delete ALL Reddit Posts
+# Delete Reddit Posts
+A program to delete ALL of your Reddit Posts. Code can be found at https://github.com/warnakey/delete-reddit-posts
 
 This program was written on February 9th and 10th, 2019 by Eric Warncke. ericwarncke@gmail.com. https://www.linkedin.com/in/ericwarncke/. 
 
