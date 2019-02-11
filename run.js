@@ -9,7 +9,7 @@ const prompt = require('prompt');
 async function run() {
 	// this is a function that allows the program to pause for any number of seconds
 	function delaySeconds(timeout) {
-    return new Promise((resolve) => {
+    		return new Promise((resolve) => {
 			setTimeout(() => { resolve(timeout) }, timeout * 1000);
 		});
 	}
