@@ -33,6 +33,7 @@ node run.js
 cd desktop/delete-reddit-posts
 node run.js
 ```
+![command prompt example](https://i.imgur.com/aXbLpbV.png)
 - You will see a window popup on your screen
 - Click back onto the Terminal or Command Prompt and enter your Reddit username when prompted (then hit Enter)
 - Enter your Reddit password when prompted (then hit enter) [don't worry, only you will see your password!]
