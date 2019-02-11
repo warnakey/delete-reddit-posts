@@ -338,8 +338,8 @@ async function run() {
 		
 	console.log("Program complete. Closing out of Puppeteer and exiting the program.");
 	
-    await page.close();
-    await browser.close();
+    	await page.close();
+    	await browser.close();
 	
 	//the function below closes the program after 5 seconds, just in case the program refuses to close
 	setTimeout((function() {  
