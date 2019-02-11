@@ -7,6 +7,7 @@ This program was written on February 9th and 10th, 2019 by Eric Warncke. ericwar
 
 - download a ZIP of this program by clicking the "Clone or download" button on https://github.com/warnakey/delete-reddit-posts
 - extract the ZIP file to your desktop
+- rename the new folder "delete-reddit-posts" (if necessary)
 - open the Terminal (on Mac) or Command Prompt (on Windows) and type the following commands the first time you use the program (pressing enter after each command and letting all files download)
 ## if you use Windows
 ```
