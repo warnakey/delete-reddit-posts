@@ -219,11 +219,25 @@ async function run() {
 	//******************************************************************************//
 	//      THIS IS THE PART OF THE CODE WHERE THE DELETING ACTUALLY HAPPENS        //
 	//******************************************************************************//
-		
-	// click on the user profile if it is the old reddit
-	await page.click('span.user a', {delay: 250});
 	
-	console.log("Navigated to the user page.");
+	// wait 3 seconds to allow the username to load
+	await delaySeconds(3);
+	
+	// Check to see if any plugins need to be updated
+	let checkForUsername = await page.$x('//span[@class="user"]');
+
+	if (checkForUsername.length > 0) {
+
+		// click on the user profile if it is the old reddit
+		await page.click('span.user a', {delay: 250});
+	
+		console.log("Navigated to the user profile page.");
+
+	} else {
+
+		console.log("Unable to find the profile page link - now the program will crash.");
+
+	}
 	
 	// wait 3 seconds to see allow user's personal reddit page to fully load
 	await delaySeconds(3);
