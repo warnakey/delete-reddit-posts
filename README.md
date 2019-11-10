@@ -1,6 +1,10 @@
 # Delete Reddit Posts
 A program to delete ALL of your Reddit Posts. Code can be found at https://github.com/warnakey/delete-reddit-posts
 
+NOTE: You MUST enter your username and password in the TERMINAL and NOT inside the browser window! Doing this will mess up the program and cause it to fail. 
+
+Please follow all directions outlined in the documentation below! :)
+
 This program was written on February 9th and 10th, 2019 by Eric Warncke. ericwarncke@gmail.com. https://www.linkedin.com/in/ericwarncke/. 
 
 # Watch the video
