@@ -156,7 +156,125 @@ async function run() {
 		break;
 	}
 	
-	await delaySeconds(1);
+	await delaySeconds(2);
+	
+	//******************************************************************************//
+	//         CHECK IF THE USER HAS 2-FACTOR AUTHENTICATION TURNED ON              //
+	//******************************************************************************//
+	
+	// the 2 factor authentication page has a fieldset with the class "otp" that contains the label "6 digit code". Check for that.
+	let checkForTwoFactorAuthentication = await page.$x('//fieldset[@class="otp"]');
+
+	if (checkForTwoFactorAuthentication.length > 0) {
+	
+		console.log("This account uses 2 factor authentication.");
+		
+		console.log("Please check your 2 factor authentication app, text messages or email to find your authentication code and enter it in the console prompt below.");
+		
+		// create an undefined variable used for the loop that asks for the 2 factor authentication code
+		let redditTwoFactorCode = 1;
+		// while the previous variable is undefined
+		while (redditTwoFactorCode == 1) {	
+			// ask the person for their 2 factor authentication code
+			const tfacredentials = await new Promise( ( resolve, reject ) => {
+				prompt.get( [ 'reddit_two_factor_code' ], ( error, result ) => {
+					resolve( result );
+				});
+			});
+
+			let twoFactorCode = tfacredentials.reddit_two_factor_code;
+		
+			// check to make sure the two factor code that was entered contains numbers
+			if (twoFactorCode == "") {
+				console.log("Please enter a two factor authentication code.");
+				continue;
+			} else {
+				// assign a variable as the entered code so we can break out of the loop
+				let redditTwoFactorAccessCode = twoFactorCode;
+				
+				console.log("Attempting to use the two factor code you provided.");
+			}
+
+			// click inside the field where you will enter the 2 factor authentication code
+			await page.click('input#loginOtp', {delay: 250});
+			
+			// type in the access code
+			await page.keyboard.type(twoFactorCode, { delay: 60 });
+			
+			await delaySeconds(1);
+			
+			// click on the blue CHECK CODE button
+			await page.click('button.AnimatedForm__submitButton', {delay: 250});
+			
+			await delaySeconds(1);
+					
+			// check the page for a warning that says "Code must be 6 digits"
+			let checkForWrongNumberOfDigits = await page.$x("//div[contains(text(), 'Code must be 6 digits')]");
+			
+			// check to see if the user does not exist
+			if (checkForWrongNumberOfDigits.length > 0) {
+				// if the code was entered incorrectly, start back at the top of the loop and ask for the code again
+				console.log("The 2 factor authentication code entered was incorrect. Please check your 2 factor authentication code for accuracy and try again.");
+				
+				// reload the page to delete the inputs that were already entered in the 2 factor authentication code field
+				await page.reload();
+				
+				// go back to the start of the loop
+				continue;
+			} 
+			
+			// check the page for a warning that says "you are doing that too much. try again in X minutes. (usually 3 or 6)"
+			let checkForTooMuchWarningAuth = await page.$x("//span[contains(text(), 'you are doing that too much')]");
+			// check to see if the user does not exist
+			if (checkForTooMuchWarningAuth.length > 0) {
+				// if the user does not exist, start back at the top of the loop and ask for the access code again
+				console.log("You are trying to log in too much. Wait a while then try again.");
+				
+				// reload the page to delete the inputs that were already entered in the access code field
+				await page.reload();
+				
+				// go back to the start of the loop
+				continue;
+			}
+
+			// check the page for a warning that says "Your session has expired. Please refresh the page and try again."
+			let checkForExpiredSession = await page.$x("//span[contains(text(), 'Your session has expired')]");
+			// check to see if the user does not exist
+			if (checkForExpiredSession.length > 0) {
+				// if the session expired, reload the page to try again
+				console.log("The session has expired due to waiting too long to enter the code. Reloading the page to try again.");
+				
+				// reload the page to delete the inputs that were already entered in the access code field
+				await page.reload();
+				
+				// go back to the start of the loop
+				continue;
+			}
+			
+			// check the page for a warning that says "The verification code you entered is not valid"
+			let checkForNotValidCode = await page.$x("//div[contains(text(), 'The verification code you entered is not valid')]");
+			// check to see if the code entered was valid
+			if (checkForNotValidCode.length > 0) {
+				// if the code entered was wrong, reload the page to try again
+				console.log("The 2 factor authentication code you entered was incorrect. Please check your code for accuracy and try again.");
+				
+				// reload the page to delete the inputs that were already entered in the access code field
+				await page.reload();
+				
+				// go back to the start of the loop
+				continue;
+			}		
+			// if you successfully signed in, leave this loop so you can move to the next part of the program
+			break;
+		}
+		
+		await delaySeconds(2);
+
+	} else {
+
+		console.log("This account does not use 2 factor authentication. Proceeding to login page.");
+
+	}
 	
 	// reload the page just in case of a bug that makes it look like you aren't logged in after you just logged in
 	await page.reload();
