@@ -95,10 +95,9 @@ async function run() {
 		await page.click('button.AnimatedForm__submitButton', {delay: 250});
 		
 		await delaySeconds(1);
-				
+						
 		// check the page for a warning that says "Incorrect username or password"
 		let checkForIncorrectUserOrPass = await page.$x("//div[contains(text(), 'Incorrect')]");
-		
 		// check to see if the user does not exist
 		if (checkForIncorrectUserOrPass.length > 0) {
 			// if the user does not exist, start back at the top of the loop and ask for the username and password again
@@ -156,20 +155,22 @@ async function run() {
 		break;
 	}
 	
-	await delaySeconds(2);
-	
 	//******************************************************************************//
 	//         CHECK IF THE USER HAS 2-FACTOR AUTHENTICATION TURNED ON              //
 	//******************************************************************************//
 	
-	// the 2 factor authentication page has a fieldset with the class "otp" that contains the label "6 digit code". Check for that.
-	let checkForTwoFactorAuthentication = await page.$x('//fieldset[@class="otp"]');
-
-	if (checkForTwoFactorAuthentication.length > 0) {
+	await delaySeconds(1);
+			
+	// the 2 factor authentication page has an h1 that says "Enter the 6 digit code from your authenticator app". Check for that.
+	let checkForTwoFactorAuthentication = await page.$x("//h1[contains(text(), 'Enter the 6 digit code')]");
 	
+	
+	if (checkForTwoFactorAuthentication.length > 0) {
+			
 		console.log("This account uses 2 factor authentication.");
 		
-		console.log("Please check your 2 factor authentication app, text messages or email to find your authentication code and enter it in the console prompt below.");
+		console.log("Please check your 2 factor authentication app, text messages or email to find your authentication code");
+		console.log("and enter it in the console prompt below.");
 		
 		// create an undefined variable used for the loop that asks for the 2 factor authentication code
 		let redditTwoFactorCode = 1;
@@ -210,8 +211,7 @@ async function run() {
 					
 			// check the page for a warning that says "Code must be 6 digits"
 			let checkForWrongNumberOfDigits = await page.$x("//div[contains(text(), 'Code must be 6 digits')]");
-			
-			// check to see if the user does not exist
+			// check to see if the the right number of digits were entered
 			if (checkForWrongNumberOfDigits.length > 0) {
 				// if the code was entered incorrectly, start back at the top of the loop and ask for the code again
 				console.log("The 2 factor authentication code entered was incorrect. Please check your 2 factor authentication code for accuracy and try again.");
@@ -225,7 +225,7 @@ async function run() {
 			
 			// check the page for a warning that says "you are doing that too much. try again in X minutes. (usually 3 or 6)"
 			let checkForTooMuchWarningAuth = await page.$x("//span[contains(text(), 'you are doing that too much')]");
-			// check to see if the user does not exist
+			// check to see if the wrong code has been entered too many times
 			if (checkForTooMuchWarningAuth.length > 0) {
 				// if the user does not exist, start back at the top of the loop and ask for the access code again
 				console.log("You are trying to log in too much. Wait a while then try again.");
@@ -239,7 +239,7 @@ async function run() {
 
 			// check the page for a warning that says "Your session has expired. Please refresh the page and try again."
 			let checkForExpiredSession = await page.$x("//span[contains(text(), 'Your session has expired')]");
-			// check to see if the user does not exist
+			// check to see if the session has expired
 			if (checkForExpiredSession.length > 0) {
 				// if the session expired, reload the page to try again
 				console.log("The session has expired due to waiting too long to enter the code. Reloading the page to try again.");
@@ -263,23 +263,25 @@ async function run() {
 				
 				// go back to the start of the loop
 				continue;
-			}		
-			// if you successfully signed in, leave this loop so you can move to the next part of the program
+			}
+			console.log("Two factor authorizaton code entered successfully.");
+			
+			// if you successfully entered the access code, leave this loop so you can move to the next part of the program
 			break;
-		}
+		}		
 		
-		await delaySeconds(2);
-
 	} else {
-
+		
 		console.log("This account does not use 2 factor authentication. Proceeding to login page.");
+		await delaySeconds(2);
 
 	}
 	
 	// reload the page just in case of a bug that makes it look like you aren't logged in after you just logged in
 	await page.reload();
-	
+			
 	console.log("Successfully logged in to Reddit with the provided Username and Password.");
+	console.log("...Loading for 11 seconds...");
 	
 	// wait 11 seconds, just in case you have the "you are already logged in, redirecting you" screen
 	await delaySeconds(11);
@@ -288,8 +290,10 @@ async function run() {
 	//         CHECK IF THE USER IS USING THE NEW OR OLD VERSION OF REDDIT          //
 	//******************************************************************************//
 	
-	// the new version of Reddit has a button that says "back to top" on all homepages. The old version doesn't. That is how we will tell the difference.
-	let checkForNewBox = await page.$x("//button[contains(text(), 'back to top')]");
+	// the new version of Reddit has a button at the top with a quicklink to the popular page. It is an a tag with an id of 'header-quicklinks-popular'
+	// We will check for that link to see if the user has the new or old version of reddit
+	
+	let checkForNewBox = await page.$x("//a[contains(@id,'header-quicklinks-popular')]");
 	
 	//******************************************************************************//
 	//     USERS OF THE NEW REDDIT WILL TEMPORARILY SWITCH TO THE OLD VERSION       //
@@ -299,30 +303,25 @@ async function run() {
 	if (checkForNewBox.length > 0) {
 		console.log("This reddit account is using the new version of Reddit.");
 		
-		// We are going to switch to the old version of Reddit, so click on the user profile dropdown
-		await page.click('#USER_DROPDOWN_ID', {delay: 250});
-		
-		await delaySeconds(1);
-		
-		// click on the link to go to the settings page
-		await page.click('a.s11l4hu4-2.hUWSuD:nth-child(3)', {delay: 250});
+		// We are going to switch to the old version of Reddit, so go to the user settings page
+		await page.goto('https://www.reddit.com/settings', {waitUntil: 'networkidle2'});
 		
 		console.log("Navigated to the settings page.");
 		
-		await delaySeconds(5);
+		await delaySeconds(3);
 		
-		// test to find the opt out of the redesign option. If the opt out of the redesign option is not found within 5 seconds, fail this test
-		Promise.race([page.waitFor('.igup49-5.bIQCbu:nth-of-type(6) button.nUcKP', {visible: true}), new Promise(s => setTimeout(s, 5000))]);
+		// test to find the opt out of the redesign option. If the opt out of the redesign option is not found within 3 seconds, fail this test
+		Promise.race([page.waitFor('._2HkX3D1t3uo8khrlDewaew ._1oREjd5ToMFah-VfX5Zt1z button', {visible: true}), new Promise(s => setTimeout(s, 5000))]);
 		
 		// click on the option to temporarily opt out of the redesign because it is easier to delete posts in the old version of Reddit
-		await page.click('.igup49-5.bIQCbu:nth-of-type(6) button.nUcKP', {delay: 250});
+		await page.click('._2HkX3D1t3uo8khrlDewaew ._1oREjd5ToMFah-VfX5Zt1z button', {delay: 250});
 		
 		console.log("Temporarily switching to the old Reddit. Don't worry, we'll switch back after.");
 		
 		await delaySeconds(2);
 		
 		// click on the OPT OUT button
-		await page.click('button.s1oehqdu-4.gANuJQ', {delay: 250});
+		await page.click('button.Ch-0dFLxLOtcc6xCyQvsk', {delay: 250});
 		
 		// wait 3 seconds to see allow user's personal reddit page to fully load
 		await delaySeconds(3);
@@ -436,13 +435,13 @@ async function run() {
 		
 	// if the user previously was using the new version of Reddit we will switch back to the new version before closing the program
 	if (checkForNewBox.length > 0) {
-		// if the user was using the new version before deleting their posts, click on the preferences button at the top to switch back
-		await page.click('a.pref-lang.choice', {delay: 250});
+		// if the user was using the new version before deleting their posts, go to the preferences page to switch back
+		await page.goto('https://www.reddit.com/prefs/', {waitUntil: 'networkidle2'});
 		
 		await delaySeconds(1);
 		
-		// click on the box that says 'Use the redesign as my default experience'		
-		await page.click('form.prefoptions tr:nth-child(12) input[type=checkbox]:nth-of-type(2)', {delay: 250});
+		// click on the box that says 'Use new Reddit as my default experience'		
+		await page.click('form.prefoptions tr:nth-child(13) td.prefright input#in_redesign_beta', {delay: 250});
 		
 		await delaySeconds(1);
 		
@@ -451,21 +450,11 @@ async function run() {
 		//await page.evaluate((selector) => document.querySelector(selector).click(), selector);
 		
 		// click on the save options button
-		await page.click('input.btn.save-preferences', {delay: 250});
+		await page.click('input.save-preferences', {delay: 250});
 		
 		console.log("Switched back to the new Reddit.");
 		
-		await delaySeconds(3);
-		
-		// click on the user profile dropdown if it is the new reddit
-		await page.click('#USER_DROPDOWN_ID', {delay: 250});
-		
-		await delaySeconds(1);
-		
-		// click on the link to go to the user profile page
-		await page.click('a.s11l4hu4-2.hUWSuD:nth-of-type(1)', {delay: 250});
-		
-		await delaySeconds(5);
+		await delaySeconds(2);
 	}
 		
 	console.log("Program complete. Closing out of Puppeteer and exiting the program.");
