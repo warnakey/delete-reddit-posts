@@ -20,6 +20,7 @@ This program was written on February 9th and 10th, 2019 by Eric Warncke. ericwar
 ## if you use Windows
 ```
 cd desktop\delete-reddit-posts
+npm install
 npm install puppeteer
 npm install prompt
 node run.js
@@ -27,6 +28,7 @@ node run.js
 ## if you use Mac
 ```
 cd desktop/delete-reddit-posts
+npm install
 npm install puppeteer
 npm install prompt
 node run.js
@@ -47,6 +49,7 @@ node run.js
 - You will see a window popup on your screen
 - Click back onto the Terminal or Command Prompt and enter your Reddit username when prompted (then hit Enter)
 - Enter your Reddit password when prompted (then hit enter) [don't worry, only you will see your password!]
+- (optional) Enter your 2 factor authentication code, if you have this option enabled
 
 ![command prompt example 2](https://i.imgur.com/Xsztpxa.png)
 
