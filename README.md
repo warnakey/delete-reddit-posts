@@ -12,7 +12,7 @@ This program was written on February 9th and 10th, 2019 by Eric Warncke. ericwar
 
 # How to use this program
 
-- go to https://nodejs.org/en/download/, then download and install Node.js on your Windows or Mac machine
+- go to https://nodejs.org/en/download/, then download and install Node.js on your Windows or Mac machine (make sure you have the latest version of Node.js installed on your machine! Older versions may produce error messages)
 - download a ZIP of this program by clicking the "Clone or download" button on https://github.com/warnakey/delete-reddit-posts
 - extract the ZIP file to your desktop
 - rename the new folder "delete-reddit-posts" (if necessary)
