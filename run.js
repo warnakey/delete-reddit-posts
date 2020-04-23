@@ -98,9 +98,9 @@ async function run() {
 						
 		// check the page for a warning that says "Incorrect username or password"
 		let checkForIncorrectUserOrPass = await page.$x("//div[contains(text(), 'Incorrect')]");
-		// check to see if the user does not exist
+		// check to see if the username or password was wrong
 		if (checkForIncorrectUserOrPass.length > 0) {
-			// if the user does not exist, start back at the top of the loop and ask for the username and password again
+			// if the username or password was wrong, start back at the top of the loop and ask for the username and password again
 			console.log("That username or password is incorrect. Please check your username and password for accuracy and try again.");
 			
 			// reload the page to delete the inputs that were already entered in the username and password field
@@ -112,7 +112,7 @@ async function run() {
 		
 		// check the page for a warning that says "you are doing that too much. try again in X minutes. (usually 3 or 6)"
 		let checkForTooMuchWarning = await page.$x("//span[contains(text(), 'you are doing that too much')]");
-		// check to see if the user does not exist
+		// check to see if the user needs to wait before trying to login again
 		if (checkForTooMuchWarning.length > 0) {
 			// if the user does not exist, start back at the top of the loop and ask for the username and password again
 			console.log("You are trying to log in too much. Wait a while then try again.");
@@ -140,10 +140,10 @@ async function run() {
 		
 		// check the page for a warning that says "There was an error sending your request. Please try again."
 		let checkForErrorSendingYourRequest = await page.$x("//span[contains(text(), 'There was an error sending your request')]");
-		// check to see if the user exists
+		// check to see if there was an error with the request
 		if (checkForErrorSendingYourRequest.length > 0) {
 			// close the program and tell the user to start the program over
-			console.log("Your password was incorrect. Please check your password for accuracy and try again.");
+			console.log("There was an error sending your request. Please try again.");
 			
 			// reload the page to delete the inputs that were already entered in the username and password field
 			await page.reload();
@@ -163,7 +163,6 @@ async function run() {
 			
 	// the 2 factor authentication page has an h1 that says "Enter the 6 digit code from your authenticator app". Check for that.
 	let checkForTwoFactorAuthentication = await page.$x("//h1[contains(text(), 'Enter the 6 digit code')]");
-	
 	
 	if (checkForTwoFactorAuthentication.length > 0) {
 			
@@ -227,7 +226,7 @@ async function run() {
 			let checkForTooMuchWarningAuth = await page.$x("//span[contains(text(), 'you are doing that too much')]");
 			// check to see if the wrong code has been entered too many times
 			if (checkForTooMuchWarningAuth.length > 0) {
-				// if the user does not exist, start back at the top of the loop and ask for the access code again
+				// if the wrong code was entered too many times, start back at the top of the loop and ask for the access code again
 				console.log("You are trying to log in too much. Wait a while then try again.");
 				
 				// reload the page to delete the inputs that were already entered in the access code field
