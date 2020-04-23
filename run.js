@@ -292,14 +292,14 @@ async function run() {
 	// the new version of Reddit has a button at the top with a quicklink to the popular page. It is an a tag with an id of 'header-quicklinks-popular'
 	// We will check for that link to see if the user has the new or old version of reddit
 	
-	let checkForNewBox = await page.$x("//a[contains(@id,'header-quicklinks-popular')]");
+	let checkForNewVersion = await page.$x("//a[contains(@id,'header-quicklinks-popular')]");
 	
 	//******************************************************************************//
 	//     USERS OF THE NEW REDDIT WILL TEMPORARILY SWITCH TO THE OLD VERSION       //
 	//******************************************************************************//
 	
-	// if the back to top box is found that means it is the new version of Reddit, so we will run the code below
-	if (checkForNewBox.length > 0) {
+	// if the quicklink to popular page link is found that means it is the new version of Reddit, so we will run the code below
+	if (checkForNewVersion.length > 0) {
 		console.log("This reddit account is using the new version of Reddit.");
 		
 		// We are going to switch to the old version of Reddit, so go to the user settings page
@@ -433,7 +433,7 @@ async function run() {
 	//******************************************************************************//
 		
 	// if the user previously was using the new version of Reddit we will switch back to the new version before closing the program
-	if (checkForNewBox.length > 0) {
+	if (checkForNewVersion.length > 0) {
 		// if the user was using the new version before deleting their posts, go to the preferences page to switch back
 		await page.goto('https://www.reddit.com/prefs/', {waitUntil: 'networkidle2'});
 		
