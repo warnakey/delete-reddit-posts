@@ -444,10 +444,6 @@ async function run() {
 		
 		await delaySeconds(1);
 		
-		//let newRedditSelector = 'input[name="in_redesign_beta"]';
-		// use this evaluate property because this is an input box instead of a normal selector (like <a>, or <button>)
-		//await page.evaluate((selector) => document.querySelector(selector).click(), selector);
-		
 		// click on the save options button
 		await page.click('input.save-preferences', {delay: 250});
 		
